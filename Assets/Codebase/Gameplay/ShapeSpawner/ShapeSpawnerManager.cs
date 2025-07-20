@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Threading;
-using Codebase.Gameplay.Factory;
+using Codebase.Gameplay.ShapeSpawner.Factory;
 using Codebase.Utils;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace Codebase.Gameplay
+namespace Codebase.Gameplay.ShapeSpawner
 {
-    public class ShapesSpawner : MonoBehaviour
+    public class ShapeSpawnerManager : IInitializable, IDisposable
     {
-        [Inject] private ShapeFactory _shapeFactory;
+        [Inject] private ShapeSpawnerFactory _spawnerFactory;
+        [Inject] private IShapeSpawnerLimiter _shapeSpawnLimiter;
         private CancellationTokenSource _cts;
 
-        private async void Start()
+        public void Initialize()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(5));
-            SpawnTest();
+            _shapeSpawnLimiter.OnLimitReached += StopSpawning;
+        }
+
+        public void Dispose()
+        {
+            StopSpawning();
+            _shapeSpawnLimiter.OnLimitReached -= StopSpawning;
         }
 
         public void StartSpawning(FloatRangeValues spawnIntervalRange, FloatRangeValues speedRange)
         {
             StopSpawning();
             _cts = new CancellationTokenSource();
-
             SpawnLoopAsync(spawnIntervalRange, speedRange, _cts.Token).Forget();
         }
 
@@ -43,9 +47,10 @@ namespace Codebase.Gameplay
                 float delay = Random.Range(spawnIntervalRange.Min, spawnIntervalRange.Max);
                 float speed = Random.Range(speedRange.Min, speedRange.Max);
 
-                Shape shape = _shapeFactory.CreateAt(transform.position);
-                shape.Initialize(speed);
-                shape.StartMovement();
+                int spawnerNumber = Random.Range(0, _spawnerFactory.CreatedSpawners.Count);
+                _spawnerFactory.CreatedSpawners[spawnerNumber].Spawn(speed);
+
+                _shapeSpawnLimiter.RegisterShapeSpawn();
 
                 await UniTask.WaitForSeconds(delay, cancellationToken: token);
             }
