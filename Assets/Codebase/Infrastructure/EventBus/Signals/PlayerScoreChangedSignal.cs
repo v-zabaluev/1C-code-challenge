@@ -4,9 +4,9 @@
     {
         public readonly int Score;
 
-        public PlayerScoreChangedSignal(int health)
+        public PlayerScoreChangedSignal(int points)
         {
-            Score = health;
+            Score = points;
         }
     }
 }

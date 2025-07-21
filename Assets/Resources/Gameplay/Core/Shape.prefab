@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 750771135887999701}
   - component: {fileID: 1719592655068566033}
   - component: {fileID: -1762979803766730921}
+  - component: {fileID: 5952368131020777454}
   m_Layer: 0
   m_Name: Shape
   m_TagString: Untagged
@@ -31,8 +32,8 @@ Transform:
   m_GameObject: {fileID: 7802510772885321702}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.42, y: 2.58, z: 0}
-  m_LocalScale: {x: 0.3148, y: 0.3148, z: 0.3148}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,13 +81,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: -1889231720087132567, guid: a1d05a8045d78884fb587bc1ca8d263a, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 21300000, guid: a1d05a8045d78884fb587bc1ca8d263a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -130,8 +131,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.06, y: 5.11}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moving: {fileID: 1719592655068566033}
   _view: {fileID: -1762979803766730921}
+  _dragHandler: {fileID: 5952368131020777454}
 --- !u!114 &1719592655068566033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,3 +206,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 4373243661338108487}
+--- !u!114 &5952368131020777454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802510772885321702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e983cd5710947bfa54b6bbfc1d719f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
