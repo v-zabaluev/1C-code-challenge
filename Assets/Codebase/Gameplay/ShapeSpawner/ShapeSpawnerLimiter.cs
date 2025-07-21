@@ -1,4 +1,6 @@
 ﻿using System;
+using Codebase.Utils;
+using Random = UnityEngine.Random;
 
 namespace Codebase.Gameplay.ShapeSpawner
 {
@@ -20,10 +22,9 @@ namespace Codebase.Gameplay.ShapeSpawner
                 OnLimitReached?.Invoke();
             }
         }
-
-        public void SetShapeSpawnerLimit(int maxSpawns)
+        public void SetShapeSpawnerLimit(IntRangeValues count)
         {
-            MaxSpawns = maxSpawns;
+            MaxSpawns = Random.Range(count.Min, count.Max);
             _currentSpawns = 0;
         }
     }

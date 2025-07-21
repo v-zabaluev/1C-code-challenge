@@ -1,4 +1,5 @@
 using System;
+using Codebase.Utils;
 
 namespace Codebase.Gameplay.ShapeSpawner
 {
@@ -8,6 +9,6 @@ namespace Codebase.Gameplay.ShapeSpawner
         bool CanSpawn { get; }
         event Action OnLimitReached;
         void RegisterShapeSpawn();
-        void SetShapeSpawnerLimit(int maxSpawns);
+        void SetShapeSpawnerLimit(IntRangeValues maxSpawns);
     }
 }

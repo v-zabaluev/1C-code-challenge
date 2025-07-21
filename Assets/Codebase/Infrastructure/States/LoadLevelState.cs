@@ -59,8 +59,6 @@ namespace Codebase.Infrastructure.States
 
         private void CreateAndSetActors()
         {
-            //Read data from SO
-            Debug.Log(_gameSettings.PlayerHealth);
             //Create spawners
 
             IEnumerable<ShapeSpawnerPoint> spawnerPoints =
@@ -71,9 +69,6 @@ namespace Codebase.Infrastructure.States
                 ShapeSpawner shapeSpawner = _shapeSpawnerFactory.CreateAt(point.transform.position);
                 shapeSpawner.transform.SetParent(point.transform.parent);
             }
-            //Set params to spawner limit
-
-            //Set their params
 
             //Set player health
             //Reset score
@@ -81,12 +76,8 @@ namespace Codebase.Infrastructure.States
 
         private void StartGame()
         {
-            _shapeSpawnerLimiter.SetShapeSpawnerLimit(15);
-
-            //Read data
-            FloatRangeValues spawnInterval = new FloatRangeValues(2, 5);
-            FloatRangeValues speedInterval = new FloatRangeValues(2, 5);
-            _shapeSpawnerManager.StartSpawning(spawnInterval, speedInterval);
+            _shapeSpawnerLimiter.SetShapeSpawnerLimit(_gameSettings.ShapesCountRange);
+            _shapeSpawnerManager.StartSpawning(_gameSettings.SpawnTimeoutRange,_gameSettings.MovementSpeedRange);
         }
     }
 }

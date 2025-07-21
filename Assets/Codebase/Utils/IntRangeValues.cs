@@ -3,12 +3,12 @@ using System;
 namespace Codebase.Utils
 {
     [Serializable]
-    public class FloatRangeValues
+    public class IntRangeValues
     {
-        public float Min;
-        public float Max;
+        public int Min;
+        public int Max;
 
-        public FloatRangeValues(float min, float max)
+        public IntRangeValues(int min, int max)
         {
             Min = min;
             Max = max;

@@ -1,5 +1,6 @@
 ﻿using Codebase.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Codebase.Infrastructure.Services.StaticData.Data.Data
 {
@@ -7,7 +8,7 @@ namespace Codebase.Infrastructure.Services.StaticData.Data.Data
     public class GameSettings : ScriptableObject
     {
         [Header("Winning Condition")]
-        public FloatRangeValues SortTargetRange = new FloatRangeValues(10f, 20f);
+        public IntRangeValues ShapesCountRange = new IntRangeValues(10, 20);
 
         [Header("Spawn Settings")]
         public FloatRangeValues SpawnTimeoutRange = new FloatRangeValues(0.5f, 2f);
@@ -20,7 +21,7 @@ namespace Codebase.Infrastructure.Services.StaticData.Data.Data
         
         private void OnValidate()
         {
-            SortTargetRange.ClampValues();
+            ShapesCountRange.ClampValues();
             SpawnTimeoutRange.ClampValues();
             MovementSpeedRange.ClampValues();
         }
