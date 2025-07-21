@@ -2,6 +2,8 @@
 using Codebase.Loading;
 using UnityEngine;
 using Zenject;
+using Codebase.Infrastructure.EventBus;
+using Codebase.Infrastructure.Services.Health;
 
 namespace Codebase.Infrastructure.Installers
 {
@@ -20,7 +22,8 @@ namespace Codebase.Infrastructure.Installers
                 .AsSingle().NonLazy();
 
             Container.Bind<StateFactory>().AsSingle();
-            
+            Container.Bind<SimpleEventBus>().To<SimpleEventBus>().AsSingle().NonLazy();
+            Container.Bind<HealthService>().To<HealthService>().AsSingle().NonLazy();
             Debug.Log($"Project installer binding complete");
         }
     }

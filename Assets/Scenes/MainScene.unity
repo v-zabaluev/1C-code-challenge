@@ -1100,7 +1100,7 @@ PrefabInstance:
     - target: {fileID: 6733461678650412369, guid: b72376f0e93d40f4595c5e8c783d0f7c, type: 3}
       propertyPath: _health
       value: 
-      objectReference: {fileID: 8828961626986710138}
+      objectReference: {fileID: 0}
     - target: {fileID: 6733461678650412369, guid: b72376f0e93d40f4595c5e8c783d0f7c, type: 3}
       propertyPath: _points
       value: 
@@ -1111,7 +1111,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3952910374771612505, guid: b72376f0e93d40f4595c5e8c783d0f7c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8828961626986710138}
+      addedObject: {fileID: 8828961626986710145}
     - targetCorrespondingSourceObject: {fileID: 9079067919950118648, guid: b72376f0e93d40f4595c5e8c783d0f7c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8828961626986710137}
@@ -1177,7 +1177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 8828961626986710133}
---- !u!114 &8828961626986710138
+--- !u!114 &8828961626986710145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8828961626986710136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f7fce120cc94d9d836ee67372fbfa62, type: 3}
+  m_Script: {fileID: 11500000, guid: c49bc5d5dd1941d6bd9fff2fef0de2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 8828961626986710135}

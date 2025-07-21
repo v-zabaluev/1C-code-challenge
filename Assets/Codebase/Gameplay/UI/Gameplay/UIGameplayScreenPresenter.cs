@@ -5,12 +5,26 @@ namespace Codebase.Gameplay.UI
 {
     public class UIGameplayScreenPresenter : UIBaseScreenPresenter<UIGamePlayScreenView>
     {
-        [Inject] private GameSettings _gameSettings;
 
         public override void Show()
         {
-            _view.Health.SetValue(_gameSettings.PlayerHealth.ToString());
             base.Show();
+        }
+
+        public void InitializeScreenData(int healthValue, int pointsValue)
+        {
+            SetHealthValue(healthValue);
+            SetPointsValue(pointsValue);
+        }
+
+        private void SetPointsValue(int pointsValue)
+        {
+            _view.Points.SetValue(pointsValue.ToString());
+        }
+
+        private void SetHealthValue(int healthValue)
+        {
+            _view.Health.SetValue(healthValue.ToString());
         }
     }
 }
