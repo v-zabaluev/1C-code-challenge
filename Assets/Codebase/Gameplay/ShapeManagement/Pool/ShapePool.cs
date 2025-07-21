@@ -3,8 +3,6 @@ using Zenject;
 
 namespace Codebase.Gameplay.Pool
 {
-    public class ShapePool : MonoPoolableMemoryPool<IMemoryPool, Shape>
-    {
-        
-    }
+    public class ShapePool : MonoPoolableMemoryPool<ShapeData, IMemoryPool, Shape> { }
+
 }

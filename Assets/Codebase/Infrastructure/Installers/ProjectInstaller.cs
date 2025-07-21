@@ -1,4 +1,5 @@
-﻿using Codebase.Infrastructure.States.Factory;
+﻿using Codebase.Gameplay;
+using Codebase.Infrastructure.States.Factory;
 using Codebase.Loading;
 using UnityEngine;
 using Zenject;
@@ -23,7 +24,7 @@ namespace Codebase.Infrastructure.Installers
 
             Container.Bind<StateFactory>().AsSingle();
             Container.Bind<SimpleEventBus>().To<SimpleEventBus>().AsSingle().NonLazy();
-            
+
             BindServices();
             Debug.Log($"Project installer binding complete");
         }

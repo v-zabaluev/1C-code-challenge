@@ -6,22 +6,28 @@ using Zenject;
 
 namespace Codebase.Gameplay
 {
-    public class Shape : MonoBehaviour, IPoolable<IMemoryPool>, IDisposable
+    public class Shape : MonoBehaviour, IPoolable<ShapeData, IMemoryPool>, IDisposable
     {
         [Inject] private SimpleEventBus _eventBus;
         [SerializeField] private ShapeMoving _moving;
+        [SerializeField] private ShapeView _view;
         private IMemoryPool _pool;
+        private ShapeData _data;
 
-        public void OnSpawned(IMemoryPool pool)
+        public void OnSpawned(ShapeData data, IMemoryPool pool)
         {
+            _data = data;
             _pool = pool;
             
+            _view.SetSprite(data.ShapeSprite);
+
             _eventBus.Subscribe<GameOverSignal>(OnGameOver);
         }
 
         public void OnDespawned()
         {
             _moving.ResetState();
+            _data = null;
         }
 
         public void Initialize(float speed)
@@ -45,5 +51,13 @@ namespace Codebase.Gameplay
         {
             _moving.ResetState();
         }
+    }
+
+    public enum ShapeType
+    {
+        Square,
+        Circle,
+        Triangle,
+        Star
     }
 }

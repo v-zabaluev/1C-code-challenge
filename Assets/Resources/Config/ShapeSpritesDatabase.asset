@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a7e86ef3d74ec0b3942f54d7f65010, type: 3}
+  m_Name: ShapeSpritesDatabase
+  m_EditorClassIdentifier: 
+  _entries:
+  - ShapeType: 0
+    Sprites:
+    - {fileID: -3755092941640275094, guid: f83e28ca579c0f04aa4a2dbe2e5ed1da, type: 3}
+    - {fileID: 8002585496187599321, guid: 302366eac9e72e5428d0283cece0a94f, type: 3}
+    - {fileID: 6504068134282205539, guid: 07bcec38e37cde34ca588f99e5691802, type: 3}
+    - {fileID: -2915280912864080890, guid: 476efb7cad8f973488b23563aad752d1, type: 3}
+    - {fileID: 3220652500251263642, guid: 159408de68196944aa3cd00313577701, type: 3}
+  - ShapeType: 1
+    Sprites:
+    - {fileID: -1889231720087132567, guid: a1d05a8045d78884fb587bc1ca8d263a, type: 3}
+    - {fileID: -4566925204912865481, guid: f3fe89b9c0891f647bb5d7d8581289eb, type: 3}
+    - {fileID: 3573298543149287888, guid: 81d1f80a4b8a4f8459531ebe9d04e7f9, type: 3}
+    - {fileID: -6876967963600135126, guid: f7bb7cdd2d0d2fe48a4d4ed93eb0ec69, type: 3}
+  - ShapeType: 2
+    Sprites:
+    - {fileID: -6565041290681566931, guid: a025b3f24f96b5743b1501e47d3644d5, type: 3}
+    - {fileID: -4247975148853776570, guid: c7c4771c09692464bab9c54b29147c5f, type: 3}
+    - {fileID: -6256909488818572247, guid: 5e6ce6802d83fc74292b930b4cea40fd, type: 3}
+    - {fileID: -2080536829532787511, guid: 2be7a98021339974f8a3ed00958df895, type: 3}
+  - ShapeType: 3
+    Sprites:
+    - {fileID: 5757424183096077452, guid: df149dcd15cbc144f8688256e9b05103, type: 3}
+    - {fileID: 6914771903059274710, guid: 97d3010cfc62d394d83fa24bf00fe2c4, type: 3}
+    - {fileID: -1117783046470798763, guid: 8e9e1421bd637ce4381fef3712ecb7cb, type: 3}
+    - {fileID: 8320110961418760705, guid: 8aaabdb99da7150439998980eaabbd02, type: 3}

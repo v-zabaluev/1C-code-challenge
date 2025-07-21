@@ -11,8 +11,12 @@ namespace Codebase.Gameplay.Installers
 
         public override void InstallBindings()
         {
-            Container.BindFactory<Shape, ShapeFactory>().FromPoolableMemoryPool<Shape, ShapePool>(poolBinder =>
-                poolBinder.WithInitialSize(15).FromComponentInNewPrefab(_shapePrefab).UnderTransformGroup("Shapes"));
+            Container.BindFactory<ShapeData, Shape, ShapeFactory>()
+                .FromPoolableMemoryPool<ShapeData, Shape, ShapePool>(poolBinder =>
+                    poolBinder
+                        .WithInitialSize(15)
+                        .FromComponentInNewPrefab(_shapePrefab)
+                        .UnderTransformGroup("Shapes"));
         }
     }
 }

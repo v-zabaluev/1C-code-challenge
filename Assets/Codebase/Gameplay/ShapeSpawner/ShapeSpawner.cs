@@ -14,12 +14,16 @@ namespace Codebase.Gameplay.ShapeSpawner
     public class ShapeSpawner : MonoBehaviour
     {
         [Inject] private ShapeFactory _shapeFactory;
+        [Inject] private ShapeSpritesDatabase _spritesDatabase;
+        
         private List<Shape> _activeShapes = new List<Shape>();
         public List<Shape> ActiveShapes => _activeShapes;
         
         public Shape Spawn(float speed)
         {
-            Shape shape = _shapeFactory.CreateAt(transform.position);
+            var data = _spritesDatabase.GetRandomShapeData();
+            Shape shape = _shapeFactory.CreateAt(transform.position, data);
+            
             shape.Initialize(speed);
             shape.StartMovement();
             _activeShapes.Add(shape);
