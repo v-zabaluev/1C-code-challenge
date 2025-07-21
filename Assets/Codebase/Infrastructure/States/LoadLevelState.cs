@@ -2,6 +2,7 @@
 using System.Linq;
 using Codebase.Gameplay.ShapeSpawner;
 using Codebase.Gameplay.ShapeSpawner.Factory;
+using Codebase.Gameplay.UI;
 using Codebase.Infrastructure.Services.StaticData.Data.Data;
 using Codebase.Loading;
 using Codebase.Utils;
@@ -20,6 +21,7 @@ namespace Codebase.Infrastructure.States
         private IShapeSpawnerLimiter _shapeSpawnerLimiter;
         private ShapeSpawnerFactory _shapeSpawnerFactory;
         private ShapeSpawnerManager _shapeSpawnerManager;
+        private UIGameplayScreenPresenter _gameplayScreenPresenter;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, GameSettings gameSettings)
         {
@@ -55,6 +57,7 @@ namespace Codebase.Infrastructure.States
             _shapeSpawnerLimiter = sceneContext.Container.Resolve<IShapeSpawnerLimiter>();
             _shapeSpawnerFactory = sceneContext.Container.Resolve<ShapeSpawnerFactory>();
             _shapeSpawnerManager = sceneContext.Container.Resolve<ShapeSpawnerManager>();
+            _gameplayScreenPresenter = sceneContext.Container.Resolve<UIGameplayScreenPresenter>();
         }
 
         private void CreateAndSetActors()
@@ -70,6 +73,7 @@ namespace Codebase.Infrastructure.States
                 shapeSpawner.transform.SetParent(point.transform.parent);
             }
 
+            
             //Set player health
             //Reset score
         }
@@ -78,6 +82,8 @@ namespace Codebase.Infrastructure.States
         {
             _shapeSpawnerLimiter.SetShapeSpawnerLimit(_gameSettings.ShapesCountRange);
             _shapeSpawnerManager.StartSpawning(_gameSettings.SpawnTimeoutRange,_gameSettings.MovementSpeedRange);
+            
+            _gameplayScreenPresenter.Show();
         }
     }
 }
