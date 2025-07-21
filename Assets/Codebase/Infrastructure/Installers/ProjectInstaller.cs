@@ -23,8 +23,15 @@ namespace Codebase.Infrastructure.Installers
 
             Container.Bind<StateFactory>().AsSingle();
             Container.Bind<SimpleEventBus>().To<SimpleEventBus>().AsSingle().NonLazy();
-            Container.Bind<HealthService>().To<HealthService>().AsSingle().NonLazy();
+            
+            BindServices();
             Debug.Log($"Project installer binding complete");
+        }
+
+        private void BindServices()
+        {
+            Container.Bind<HealthService>().To<HealthService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle().NonLazy();
         }
     }
 }

@@ -5,23 +5,23 @@ using Zenject;
 
 namespace Codebase.Gameplay.UI.ShowedValues
 {
-    public class HealthShowedValue : ShowedValue
+    public class ScoreShowedValue : ShowedValue
     {
         [Inject] private SimpleEventBus _eventBus;
 
         private void Awake()
         {
-            _eventBus.Subscribe<PlayerHealthChangedSignal>(DisplayHealth);
+            _eventBus.Subscribe<PlayerScoreChangedSignal>(DisplayScore);
         }
 
-        private void DisplayHealth(PlayerHealthChangedSignal signal)
+        private void DisplayScore(PlayerScoreChangedSignal signal)
         {
-            SetValue(signal.Health.ToString());
+            SetValue(signal.Score.ToString());
         }
 
         private void OnDestroy()
         {
-            _eventBus.Unsubscribe<PlayerHealthChangedSignal>(DisplayHealth);
+            _eventBus.Unsubscribe<PlayerScoreChangedSignal>(DisplayScore);
         }
     }
 }

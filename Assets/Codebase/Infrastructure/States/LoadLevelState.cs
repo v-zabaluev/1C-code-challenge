@@ -14,25 +14,26 @@ namespace Codebase.Infrastructure.States
 {
     public class LoadLevelState : IPayloadState<string>
     {
-        private GameStateMachine _stateMachine;
-        private SceneLoader _sceneLoader;
-        private LoadingCurtain _loadingCurtain;
+        private readonly GameStateMachine _stateMachine;
+        private readonly SceneLoader _sceneLoader;
+        private readonly LoadingCurtain _loadingCurtain;
         private readonly GameSettings _gameSettings;
         private readonly HealthService _healthService;
+        private readonly ScoreService _scoreService;
 
         private IShapeSpawnerLimiter _shapeSpawnerLimiter;
         private ShapeSpawnerFactory _shapeSpawnerFactory;
         private ShapeSpawnerManager _shapeSpawnerManager;
-        private UIGameplayScreenPresenter _gameplayScreenPresenter;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
-            GameSettings gameSettings, HealthService healthService)
+            GameSettings gameSettings, HealthService healthService, ScoreService scoreService)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
             _gameSettings = gameSettings;
             _healthService = healthService;
+            _scoreService = scoreService;
         }
 
         public async void Enter(string sceneName)
@@ -61,7 +62,6 @@ namespace Codebase.Infrastructure.States
             _shapeSpawnerLimiter = sceneContext.Container.Resolve<IShapeSpawnerLimiter>();
             _shapeSpawnerFactory = sceneContext.Container.Resolve<ShapeSpawnerFactory>();
             _shapeSpawnerManager = sceneContext.Container.Resolve<ShapeSpawnerManager>();
-            //_gameplayScreenPresenter = sceneContext.Container.Resolve<UIGameplayScreenPresenter>();
         }
 
         private void CreateAndSetActors()
@@ -84,6 +84,7 @@ namespace Codebase.Infrastructure.States
         private void StartGame()
         {
             _healthService.Initialize(_gameSettings.PlayerHealth);
+            _scoreService.Initialize(0);
             
             _shapeSpawnerLimiter.SetShapeSpawnerLimit(_gameSettings.ShapesCountRange);
             _shapeSpawnerManager.StartSpawning(_gameSettings.SpawnTimeoutRange, _gameSettings.MovementSpeedRange);

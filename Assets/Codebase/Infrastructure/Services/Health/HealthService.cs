@@ -23,7 +23,7 @@ namespace Codebase.Infrastructure.Services.Health
 
         private void InvokeHealthChanged()
         {
-            _eventBus.Invoke(new PlayerHealthValueChangedSignal(_health));
+            _eventBus.Invoke(new PlayerHealthChangedSignal(_health));
         }
     }
 }
