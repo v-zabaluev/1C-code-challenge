@@ -36,8 +36,9 @@ namespace Codebase.Gameplay
 
         public void Dispose()
         {
-            _pool?.Despawn(this);
             _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
+            _pool?.Despawn(this);
+            _pool = null;
         }
 
         private void OnGameOver(GameOverSignal signal)

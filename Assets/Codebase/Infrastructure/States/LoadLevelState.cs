@@ -3,6 +3,8 @@ using System.Linq;
 using Codebase.Gameplay.ShapeSpawner;
 using Codebase.Gameplay.ShapeSpawner.Factory;
 using Codebase.Gameplay.UI;
+using Codebase.Infrastructure.EventBus;
+using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Infrastructure.Services.Health;
 using Codebase.Infrastructure.Services.StaticData.Data.Data;
 using Codebase.Loading;
@@ -20,13 +22,15 @@ namespace Codebase.Infrastructure.States
         private readonly GameSettings _gameSettings;
         private readonly HealthService _healthService;
         private readonly ScoreService _scoreService;
+        private readonly SimpleEventBus _eventBus;
 
         private IShapeSpawnerLimiter _shapeSpawnerLimiter;
         private ShapeSpawnerFactory _shapeSpawnerFactory;
         private ShapeSpawnerManager _shapeSpawnerManager;
+        private List<ShapeSpawner> _spawners = new List<ShapeSpawner>();
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
-            GameSettings gameSettings, HealthService healthService, ScoreService scoreService)
+            GameSettings gameSettings, HealthService healthService, ScoreService scoreService, SimpleEventBus eventBus)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
@@ -34,6 +38,9 @@ namespace Codebase.Infrastructure.States
             _gameSettings = gameSettings;
             _healthService = healthService;
             _scoreService = scoreService;
+            _eventBus = eventBus;
+
+            _eventBus.Subscribe<GameRestartSignal>(OnGameRestart);
         }
 
         public async void Enter(string sceneName)
@@ -75,17 +82,24 @@ namespace Codebase.Infrastructure.States
             {
                 ShapeSpawner shapeSpawner = _shapeSpawnerFactory.CreateAt(point.transform.position);
                 shapeSpawner.transform.SetParent(point.transform.parent);
+                _spawners.Add(shapeSpawner);
             }
 
             //Set player health
             //Reset score
         }
 
+        private void OnGameRestart(GameRestartSignal signal)
+        {
+            StartGame();
+            _spawners.ForEach(x => x.Despawn());
+        }
+
         private void StartGame()
         {
             _healthService.Initialize(_gameSettings.PlayerHealth);
             _scoreService.Initialize(0);
-            
+
             _shapeSpawnerLimiter.SetShapeSpawnerLimit(_gameSettings.ShapesCountRange);
             _shapeSpawnerManager.StartSpawning(_gameSettings.SpawnTimeoutRange, _gameSettings.MovementSpeedRange);
         }
