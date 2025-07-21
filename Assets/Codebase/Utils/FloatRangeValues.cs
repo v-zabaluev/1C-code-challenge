@@ -1,5 +1,8 @@
+using System;
+
 namespace Codebase.Utils
 {
+    [Serializable]
     public class FloatRangeValues
     {
         public float Min;
@@ -9,6 +12,18 @@ namespace Codebase.Utils
         {
             Min = min;
             Max = max;
+        }
+
+        public void ClampValues()
+        {
+            if (Min > Max)
+            {
+                Min = Max;
+            }
+            else if (Max < Min)
+            {
+                Max = Min;
+            }
         }
     }
 }

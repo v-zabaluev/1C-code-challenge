@@ -2,6 +2,7 @@
 using System.Linq;
 using Codebase.Gameplay.ShapeSpawner;
 using Codebase.Gameplay.ShapeSpawner.Factory;
+using Codebase.Infrastructure.Services.StaticData.Data.Data;
 using Codebase.Loading;
 using Codebase.Utils;
 using UnityEngine;
@@ -14,16 +15,18 @@ namespace Codebase.Infrastructure.States
         private GameStateMachine _stateMachine;
         private SceneLoader _sceneLoader;
         private LoadingCurtain _loadingCurtain;
+        private readonly GameSettings _gameSettings;
 
         private IShapeSpawnerLimiter _shapeSpawnerLimiter;
         private ShapeSpawnerFactory _shapeSpawnerFactory;
         private ShapeSpawnerManager _shapeSpawnerManager;
 
-        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain)
+        public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain, GameSettings gameSettings)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _loadingCurtain = loadingCurtain;
+            _gameSettings = gameSettings;
         }
 
         public async void Enter(string sceneName)
@@ -48,7 +51,7 @@ namespace Codebase.Infrastructure.States
 
         private void GetLazyDependencies()
         {
-            var sceneContext = GameObject.FindObjectOfType<SceneContext>();
+            var sceneContext = Object.FindFirstObjectByType<SceneContext>(FindObjectsInactive.Exclude);
             _shapeSpawnerLimiter = sceneContext.Container.Resolve<IShapeSpawnerLimiter>();
             _shapeSpawnerFactory = sceneContext.Container.Resolve<ShapeSpawnerFactory>();
             _shapeSpawnerManager = sceneContext.Container.Resolve<ShapeSpawnerManager>();
@@ -57,6 +60,7 @@ namespace Codebase.Infrastructure.States
         private void CreateAndSetActors()
         {
             //Read data from SO
+            Debug.Log(_gameSettings.PlayerHealth);
             //Create spawners
 
             IEnumerable<ShapeSpawnerPoint> spawnerPoints =
