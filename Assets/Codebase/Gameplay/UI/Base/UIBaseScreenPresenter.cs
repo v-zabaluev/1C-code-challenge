@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using UniRx;
+using Zenject;
 
 namespace Codebase.Gameplay.UI
 {
@@ -6,6 +7,8 @@ namespace Codebase.Gameplay.UI
     {
         [Inject] protected TView _view;
 
+        protected CompositeDisposable _disposable = new CompositeDisposable();
+        
         public virtual void Show()
         {
             _view.Show();
@@ -14,6 +17,7 @@ namespace Codebase.Gameplay.UI
         public virtual void Hide()
         {
             _view.Hide();
+            _disposable.Dispose();
         }
         
         

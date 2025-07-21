@@ -8,6 +8,7 @@ namespace Codebase.Infrastructure.Services.Health
     {
         [Inject] private SimpleEventBus _eventBus;
         private int _score;
+        public int Score => _score;
 
         public void Initialize(int score)
         {

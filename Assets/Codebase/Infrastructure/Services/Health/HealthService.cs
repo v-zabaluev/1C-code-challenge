@@ -19,6 +19,11 @@ namespace Codebase.Infrastructure.Services.Health
         {
             _health += health;
             InvokeHealthChanged();
+
+            if (_health <= 0)
+            {
+                _eventBus.Invoke(new GameOverSignal(GameStatus.Lose));
+            }
         }
 
         private void InvokeHealthChanged()

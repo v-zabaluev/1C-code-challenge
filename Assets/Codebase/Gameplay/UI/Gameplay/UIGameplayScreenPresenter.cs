@@ -1,30 +1,22 @@
-﻿using Codebase.Infrastructure.Services.StaticData.Data.Data;
+﻿using Codebase.Infrastructure.EventBus;
+using Codebase.Infrastructure.EventBus.Signals;
+using Codebase.Infrastructure.Services.StaticData.Data.Data;
 using Zenject;
 
 namespace Codebase.Gameplay.UI
 {
-    public class UIGameplayScreenPresenter : UIBaseScreenPresenter<UIGamePlayScreenView>
+    public class UIGameplayScreenPresenter : UIBaseScreenPresenter<UIGamePlayScreenView>, IInitializable
     {
+        [Inject] private SimpleEventBus _eventBus;
 
-        public override void Show()
+        public void Initialize()
         {
-            base.Show();
+            _eventBus.Subscribe<GameOverSignal>(HideScreen);
         }
 
-        public void InitializeScreenData(int healthValue, int pointsValue)
+        private void HideScreen(GameOverSignal signal)
         {
-            SetHealthValue(healthValue);
-            SetPointsValue(pointsValue);
-        }
-
-        private void SetPointsValue(int pointsValue)
-        {
-            _view.Points.SetValue(pointsValue.ToString());
-        }
-
-        private void SetHealthValue(int healthValue)
-        {
-            _view.Health.SetValue(healthValue.ToString());
+            Hide();
         }
     }
 }

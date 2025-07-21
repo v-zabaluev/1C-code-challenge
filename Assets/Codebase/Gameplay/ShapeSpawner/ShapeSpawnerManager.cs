@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using Codebase.Gameplay.ShapeSpawner.Factory;
+using Codebase.Infrastructure.EventBus;
+using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Utils;
 using Cysharp.Threading.Tasks;
 using Zenject;
@@ -12,17 +14,20 @@ namespace Codebase.Gameplay.ShapeSpawner
     {
         [Inject] private ShapeSpawnerFactory _spawnerFactory;
         [Inject] private IShapeSpawnerLimiter _shapeSpawnLimiter;
+        [Inject] private SimpleEventBus _eventBus;
         private CancellationTokenSource _cts;
 
         public void Initialize()
         {
             _shapeSpawnLimiter.OnLimitReached += StopSpawning;
+            _eventBus.Subscribe<GameOverSignal>(OnGameOver);
         }
 
         public void Dispose()
         {
             StopSpawning();
             _shapeSpawnLimiter.OnLimitReached -= StopSpawning;
+            _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
         }
 
         public void StartSpawning(FloatRangeValues spawnIntervalRange, FloatRangeValues speedRange)
@@ -54,6 +59,11 @@ namespace Codebase.Gameplay.ShapeSpawner
 
                 await UniTask.WaitForSeconds(delay, cancellationToken: token);
             }
+        }
+
+        private void OnGameOver(GameOverSignal obj)
+        {
+            StopSpawning();
         }
 
         private void SpawnTest()
