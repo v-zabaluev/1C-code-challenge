@@ -1,5 +1,6 @@
 ﻿using Codebase.Gameplay.Factory;
 using Codebase.Gameplay.Pool;
+using Codebase.Infrastructure.GameController;
 using UnityEngine;
 using Zenject;
 
@@ -11,12 +12,19 @@ namespace Codebase.Gameplay.Installers
 
         public override void InstallBindings()
         {
-            Container.BindFactory<ShapeData, Shape, ShapeFactory>()
-                .FromPoolableMemoryPool<ShapeData, Shape, ShapePool>(poolBinder =>
-                    poolBinder
-                        .WithInitialSize(15)
-                        .FromComponentInNewPrefab(_shapePrefab)
-                        .UnderTransformGroup("Shapes"));
+            Container.BindMemoryPool<Shape, ShapePool>()
+                .WithInitialSize(15)
+                .FromComponentInNewPrefab(_shapePrefab)
+                .UnderTransformGroup("Shapes");
+
+            Container.BindIFactory<ShapeData, Shape, ShapeFactory>()
+                .To<ShapeFactory>()
+                .FromResolve();
+
+            // Биндим сам ShapeFactory
+            Container.Bind<ShapeFactory>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<GameResultController>().AsSingle();
         }
     }
 }

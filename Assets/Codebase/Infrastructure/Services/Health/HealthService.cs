@@ -4,10 +4,12 @@ using Zenject;
 
 namespace Codebase.Infrastructure.Services.Health
 {
-    public class HealthService
+    public class HealthService : IService
     {
         [Inject] private SimpleEventBus _eventBus;
         private int _health;
+        
+        public int CurrentHealth => _health;
 
         public void Initialize(int health)
         {

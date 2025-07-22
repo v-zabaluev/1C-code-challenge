@@ -2,9 +2,9 @@
 using Codebase.Infrastructure.EventBus.Signals;
 using Zenject;
 
-namespace Codebase.Infrastructure.Services.Health
+namespace Codebase.Infrastructure.Services.Score
 {
-    public class ScoreService
+    public class ScoreService : IService
     {
         [Inject] private SimpleEventBus _eventBus;
         private int _score;

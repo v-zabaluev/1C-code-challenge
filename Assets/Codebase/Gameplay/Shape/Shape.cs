@@ -2,6 +2,7 @@
 using Codebase.Infrastructure.EventBus;
 using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Infrastructure.Services.Health;
+using Codebase.Infrastructure.Services.Score;
 using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
@@ -43,6 +44,11 @@ namespace Codebase.Gameplay
             _data = null;
         }
 
+        public void Initialize(float speed)
+        {
+            _moving.Initialize(speed, Vector2.right);
+        }
+
         public void Dispose()
         {
             _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
@@ -51,11 +57,6 @@ namespace Codebase.Gameplay
             
             _dragHandler.OnBeginDragAction -= OnBeginDrag;
             _dragHandler.OnEndDragAction -= OnEndDrag;
-        }
-
-        public void Initialize(float speed)
-        {
-            _moving.Initialize(speed, Vector2.right);
         }
 
         public void StartMovement()
@@ -92,11 +93,6 @@ namespace Codebase.Gameplay
             _dragging = false;
         }
 
-        private void OnGameOver(GameOverSignal signal)
-        {
-            _moving.ResetState();
-        }
-
         private void HandleSlotCollision(SorterSlot sorter)
         {
             if (_data.ShapeType == sorter.Type)
@@ -109,6 +105,11 @@ namespace Codebase.Gameplay
             }
 
             Dispose();
+        }
+
+        private void OnGameOver(GameOverSignal signal)
+        {
+            _moving.ResetState();
         }
     }
 

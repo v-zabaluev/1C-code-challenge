@@ -2,6 +2,7 @@
 using Codebase.Infrastructure.EventBus;
 using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Infrastructure.Services.Health;
+using Codebase.Infrastructure.Services.Score;
 using Codebase.Infrastructure.States;
 using Cysharp.Threading.Tasks;
 using UniRx;

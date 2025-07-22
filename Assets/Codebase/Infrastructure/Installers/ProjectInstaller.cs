@@ -4,7 +4,9 @@ using Codebase.Loading;
 using UnityEngine;
 using Zenject;
 using Codebase.Infrastructure.EventBus;
+using Codebase.Infrastructure.GameController;
 using Codebase.Infrastructure.Services.Health;
+using Codebase.Infrastructure.Services.Score;
 
 namespace Codebase.Infrastructure.Installers
 {

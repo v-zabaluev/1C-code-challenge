@@ -6,6 +6,7 @@ using Codebase.Gameplay.UI;
 using Codebase.Infrastructure.EventBus;
 using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Infrastructure.Services.Health;
+using Codebase.Infrastructure.Services.Score;
 using Codebase.Infrastructure.Services.StaticData.Data.Data;
 using Codebase.Loading;
 using Codebase.Utils;
@@ -23,14 +24,16 @@ namespace Codebase.Infrastructure.States
         private readonly HealthService _healthService;
         private readonly ScoreService _scoreService;
         private readonly SimpleEventBus _eventBus;
-
-        private IShapeSpawnerLimiter _shapeSpawnerLimiter;
-        private ShapeSpawnerFactory _shapeSpawnerFactory;
-        private ShapeSpawnerManager _shapeSpawnerManager;
+        private readonly IShapeSpawnerLimiter _shapeSpawnerLimiter;
+        private readonly ShapeSpawnerFactory _shapeSpawnerFactory;
+        private readonly ShapeSpawnerManager _shapeSpawnerManager;
+        
         private List<ShapeSpawner> _spawners = new List<ShapeSpawner>();
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
-            GameSettings gameSettings, HealthService healthService, ScoreService scoreService, SimpleEventBus eventBus)
+            GameSettings gameSettings, HealthService healthService, ScoreService scoreService, SimpleEventBus eventBus,
+            ShapeSpawnerFactory shapeSpawnerFactory, IShapeSpawnerLimiter shapeSpawnerLimiter,
+            ShapeSpawnerManager shapeSpawnerManager)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
@@ -39,6 +42,9 @@ namespace Codebase.Infrastructure.States
             _healthService = healthService;
             _scoreService = scoreService;
             _eventBus = eventBus;
+            _shapeSpawnerFactory = shapeSpawnerFactory;
+            _shapeSpawnerLimiter = shapeSpawnerLimiter;
+            _shapeSpawnerManager = shapeSpawnerManager;
 
             _eventBus.Subscribe<GameRestartSignal>(OnGameRestart);
         }
@@ -57,24 +63,13 @@ namespace Codebase.Infrastructure.States
 
         private void OnLoaded()
         {
-            GetLazyDependencies();
             CreateAndSetActors();
             StartGame();
             _stateMachine.Enter<GameLoopState>();
         }
 
-        private void GetLazyDependencies()
-        {
-            var sceneContext = Object.FindFirstObjectByType<SceneContext>(FindObjectsInactive.Exclude);
-            _shapeSpawnerLimiter = sceneContext.Container.Resolve<IShapeSpawnerLimiter>();
-            _shapeSpawnerFactory = sceneContext.Container.Resolve<ShapeSpawnerFactory>();
-            _shapeSpawnerManager = sceneContext.Container.Resolve<ShapeSpawnerManager>();
-        }
-
         private void CreateAndSetActors()
         {
-            //Create spawners
-
             IEnumerable<ShapeSpawnerPoint> spawnerPoints =
                 Object.FindObjectsByType<ShapeSpawnerPoint>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 
@@ -84,9 +79,6 @@ namespace Codebase.Infrastructure.States
                 shapeSpawner.transform.SetParent(point.transform.parent);
                 _spawners.Add(shapeSpawner);
             }
-
-            //Set player health
-            //Reset score
         }
 
         private void OnGameRestart(GameRestartSignal signal)
