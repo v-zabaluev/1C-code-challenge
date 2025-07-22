@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   ShapesCountRange:
-    Min: 3
-    Max: 4
+    Min: 15
+    Max: 20
   SpawnTimeoutRange:
     Min: 0.5
     Max: 1
   MovementSpeedRange:
-    Min: 3
-    Max: 5
+    Min: 5
+    Max: 7
   PlayerHealth: 3
