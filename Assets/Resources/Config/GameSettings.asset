@@ -17,8 +17,8 @@ MonoBehaviour:
     Max: 20
   SpawnTimeoutRange:
     Min: 0.5
-    Max: 1
+    Max: 1.5
   MovementSpeedRange:
     Min: 5
-    Max: 7
+    Max: 6
   PlayerHealth: 3
