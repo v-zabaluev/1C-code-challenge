@@ -13,17 +13,20 @@ namespace Codebase.Gameplay
     {
         [Inject] private SimpleEventBus _eventBus;
         [Inject] private ScoreService _scoreService;
+        [Inject] private HealthService _healthService;
 
         [SerializeField] private ShapeMoving _moving;
         [SerializeField] private ShapeView _view;
         [SerializeField] private ShapeDragHandler _dragHandler;
-        
+
         private IMemoryPool _pool;
         private ShapeData _data;
-        
+
         private bool _dragEnded;
         private Vector3 _originalPosition;
         private bool _dragging;
+
+        private bool _isCollidingWithSort;
 
         public void OnSpawned(ShapeData data, IMemoryPool pool)
         {
@@ -54,7 +57,7 @@ namespace Codebase.Gameplay
             _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
             _pool?.Despawn(this);
             _pool = null;
-            
+
             _dragHandler.OnBeginDragAction -= OnBeginDrag;
             _dragHandler.OnEndDragAction -= OnEndDrag;
         }
@@ -66,19 +69,19 @@ namespace Codebase.Gameplay
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (!_dragging)
+            if (other.transform.TryGetComponent(out SorterSlot slot))
             {
-                if (other.transform.TryGetComponent(out SorterSlot slot))
+                _isCollidingWithSort = true;
+                if (!_dragging)
                 {
                     HandleSlotCollision(slot);
                 }
-                else
-                {
-                    transform.position = _originalPosition;
-                    _moving.StartMoving();
-                }
             }
+        }
 
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            _isCollidingWithSort = false;
         }
 
         private void OnBeginDrag()
@@ -91,6 +94,12 @@ namespace Codebase.Gameplay
         private void OnEndDrag()
         {
             _dragging = false;
+
+            if (!_isCollidingWithSort)
+            {
+                transform.position = _originalPosition;
+                _moving.StartMoving();
+            }
         }
 
         private void HandleSlotCollision(SorterSlot sorter)
@@ -101,7 +110,7 @@ namespace Codebase.Gameplay
             }
             else
             {
-                _scoreService.ChangeScore(-1);
+                _healthService.ChangeHealth(-1);
             }
 
             Dispose();
