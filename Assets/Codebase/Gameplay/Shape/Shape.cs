@@ -1,4 +1,5 @@
 ﻿using System;
+using Codebase.Gameplay.Particles;
 using Codebase.Infrastructure.EventBus;
 using Codebase.Infrastructure.EventBus.Signals;
 using Codebase.Infrastructure.Services.Health;
@@ -14,6 +15,7 @@ namespace Codebase.Gameplay
         [Inject] private SimpleEventBus _eventBus;
         [Inject] private ScoreService _scoreService;
         [Inject] private HealthService _healthService;
+        [Inject] private ParticleService _particleService;
 
         [SerializeField] private ShapeMoving _moving;
         [SerializeField] private ShapeView _view;
@@ -117,6 +119,7 @@ namespace Codebase.Gameplay
             }
             else
             {
+                _particleService.SpawnParticle(Effects.Explode, transform.position);
                 _healthService.ChangeHealth(-1);
             }
 
