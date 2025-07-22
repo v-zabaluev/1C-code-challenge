@@ -4,16 +4,18 @@ using UnityEngine.EventSystems;
 
 namespace Codebase.Gameplay
 {
+    using UnityEngine;
+    using System;
+
+    [RequireComponent(typeof(Collider2D))]
     public class ShapeDragHandler : MonoBehaviour
     {
-        private Vector3 _originalPosition;
         private bool _dragging;
         private Camera _camera;
         private int _activeTouchId = -1;
 
         public event Action OnBeginDragAction;
-        public event Action OnMissedDragAction;
-        public Action<SorterSlot> OnEndDragAction;
+        public event Action OnEndDragAction;
 
         private void Awake()
         {
@@ -33,28 +35,13 @@ namespace Codebase.Gameplay
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 mouseWorld2D = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
-
-                Collider2D[] hits = Physics2D.OverlapPointAll(mouseWorld2D);
-
-                foreach (var hit in hits)
-                {
-                    if (hit == GetComponent<Collider2D>())
-                    {
-                        _originalPosition = transform.position;
-                        _dragging = true;
-                        OnBeginDragAction?.Invoke();
-
-                        break;
-                    }
-                }
+                TryBeginDrag(Input.mousePosition);
             }
 
             if (_dragging && Input.GetMouseButton(0))
             {
-                Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
-                transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, _originalPosition.z);
+                Vector3 worldPos = _camera.ScreenToWorldPoint(Input.mousePosition);
+                transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
             }
 
             if (_dragging && Input.GetMouseButtonUp(0))
@@ -65,43 +52,22 @@ namespace Codebase.Gameplay
 
         private void HandleTouchInput()
         {
-            if (Input.touchCount == 0)
-                return;
-
             foreach (Touch touch in Input.touches)
             {
-                Vector3 touchWorldPos = _camera.ScreenToWorldPoint(touch.position);
-                Vector2 touchWorld2D = new Vector2(touchWorldPos.x, touchWorldPos.y);
+                Vector3 worldPos = _camera.ScreenToWorldPoint(touch.position);
 
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
                         if (_activeTouchId == -1)
-                        {
-                            Collider2D[] hits = Physics2D.OverlapPointAll(touchWorld2D);
-
-                            foreach (var hit in hits)
-                            {
-                                if (hit == GetComponent<Collider2D>())
-                                {
-                                    _originalPosition = transform.position;
-                                    _dragging = true;
-                                    _activeTouchId = touch.fingerId;
-                                    OnBeginDragAction?.Invoke();
-
-                                    break;
-                                }
-                            }
-                        }
+                            TryBeginDrag(touch.position);
 
                         break;
 
                     case TouchPhase.Moved:
                     case TouchPhase.Stationary:
                         if (_dragging && touch.fingerId == _activeTouchId)
-                        {
-                            transform.position = new Vector3(touchWorldPos.x, touchWorldPos.y, _originalPosition.z);
-                        }
+                            transform.position = new Vector3(worldPos.x, worldPos.y, transform.position.z);
 
                         break;
 
@@ -118,21 +84,23 @@ namespace Codebase.Gameplay
             }
         }
 
+        private void TryBeginDrag(Vector2 screenPosition)
+        {
+            Vector2 worldPos = _camera.ScreenToWorldPoint(screenPosition);
+            RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+
+            if (hit.collider == GetComponent<Collider2D>())
+            {
+                _dragging = true;
+                _activeTouchId = Input.touchCount > 0 ? Input.GetTouch(0).fingerId : -1;
+                OnBeginDragAction?.Invoke();
+            }
+        }
+
         private void EndDrag()
         {
             _dragging = false;
-
-            Collider2D hit = Physics2D.OverlapPoint(transform.position);
-
-            if (hit && hit.TryGetComponent(out SorterSlot slot))
-            {
-                OnEndDragAction?.Invoke(slot);
-            }
-            else
-            {
-                transform.position = _originalPosition;
-                OnMissedDragAction?.Invoke();
-            }
+            OnEndDragAction?.Invoke();
         }
     }
 }

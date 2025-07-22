@@ -16,8 +16,13 @@ namespace Codebase.Gameplay
         [SerializeField] private ShapeMoving _moving;
         [SerializeField] private ShapeView _view;
         [SerializeField] private ShapeDragHandler _dragHandler;
+        
         private IMemoryPool _pool;
         private ShapeData _data;
+        
+        private bool _dragEnded;
+        private Vector3 _originalPosition;
+        private bool _dragging;
 
         public void OnSpawned(ShapeData data, IMemoryPool pool)
         {
@@ -29,13 +34,23 @@ namespace Codebase.Gameplay
             _eventBus.Subscribe<GameOverSignal>(OnGameOver);
             _dragHandler.OnBeginDragAction += OnBeginDrag;
             _dragHandler.OnEndDragAction += OnEndDrag;
-            _dragHandler.OnMissedDragAction += OnMissedDrag;
+            _dragEnded = false;
         }
 
         public void OnDespawned()
         {
             _moving.ResetState();
             _data = null;
+        }
+
+        public void Dispose()
+        {
+            _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
+            _pool?.Despawn(this);
+            _pool = null;
+            
+            _dragHandler.OnBeginDragAction -= OnBeginDrag;
+            _dragHandler.OnEndDragAction -= OnEndDrag;
         }
 
         public void Initialize(float speed)
@@ -48,13 +63,33 @@ namespace Codebase.Gameplay
             _moving.StartMoving();
         }
 
-        public void Dispose()
+        private void OnTriggerStay2D(Collider2D other)
         {
-            _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
-            _pool?.Despawn(this);
-            _pool = null;
-            _dragHandler.OnBeginDragAction -= OnBeginDrag;
-            _dragHandler.OnEndDragAction -= OnEndDrag;
+            if (!_dragging)
+            {
+                if (other.transform.TryGetComponent(out SorterSlot slot))
+                {
+                    HandleSlotCollision(slot);
+                }
+                else
+                {
+                    transform.position = _originalPosition;
+                    _moving.StartMoving();
+                }
+            }
+
+        }
+
+        private void OnBeginDrag()
+        {
+            _originalPosition = transform.position;
+            _dragging = true;
+            _moving.StopMoving();
+        }
+
+        private void OnEndDrag()
+        {
+            _dragging = false;
         }
 
         private void OnGameOver(GameOverSignal signal)
@@ -62,28 +97,18 @@ namespace Codebase.Gameplay
             _moving.ResetState();
         }
 
-        private void OnBeginDrag()
-        {
-            _moving.StopMoving();
-        }
-
-        private void OnEndDrag(SorterSlot sorter)
+        private void HandleSlotCollision(SorterSlot sorter)
         {
             if (_data.ShapeType == sorter.Type)
             {
                 _scoreService.ChangeScore(1);
-                Dispose();
             }
-            else if (_data.ShapeType != sorter.Type)
+            else
             {
                 _scoreService.ChangeScore(-1);
-                Dispose();
             }
-        }
 
-        private void OnMissedDrag()
-        {
-            _moving.StartMoving();
+            Dispose();
         }
     }
 
