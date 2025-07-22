@@ -37,7 +37,7 @@ namespace Codebase.Gameplay.ShapeSpawner
             SpawnLoopAsync(spawnIntervalRange, speedRange, _cts.Token).Forget();
         }
 
-        public void StopSpawning()
+        private void StopSpawning()
         {
             _cts?.Cancel();
             _cts?.Dispose();

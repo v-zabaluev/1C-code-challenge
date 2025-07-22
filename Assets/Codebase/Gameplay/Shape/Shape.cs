@@ -22,29 +22,38 @@ namespace Codebase.Gameplay
         private IMemoryPool _pool;
         private ShapeData _data;
 
-        private bool _dragEnded;
         private Vector3 _originalPosition;
         private bool _dragging;
-
+        private bool _isDisposed;
         private bool _isCollidingWithSort;
 
         public void OnSpawned(ShapeData data, IMemoryPool pool)
         {
             _data = data;
             _pool = pool;
+            _isDisposed = false;
 
             _view.SetSprite(data.ShapeSprite);
 
             _eventBus.Subscribe<GameOverSignal>(OnGameOver);
             _dragHandler.OnBeginDragAction += OnBeginDrag;
             _dragHandler.OnEndDragAction += OnEndDrag;
-            _dragEnded = false;
+
+            gameObject.SetActive(true);
         }
 
         public void OnDespawned()
         {
+            gameObject.SetActive(false);
+
             _moving.ResetState();
-            _data = null;
+
+            _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
+
+            _dragHandler.OnBeginDragAction -= OnBeginDrag;
+            _dragHandler.OnEndDragAction -= OnEndDrag;
+
+            _isDisposed = true;
         }
 
         public void Initialize(float speed)
@@ -54,12 +63,9 @@ namespace Codebase.Gameplay
 
         public void Dispose()
         {
-            _eventBus.Unsubscribe<GameOverSignal>(OnGameOver);
-            _pool?.Despawn(this);
-            _pool = null;
+            if (_isDisposed) return;
 
-            _dragHandler.OnBeginDragAction -= OnBeginDrag;
-            _dragHandler.OnEndDragAction -= OnEndDrag;
+            _pool?.Despawn(this);
         }
 
         public void StartMovement()
@@ -72,6 +78,7 @@ namespace Codebase.Gameplay
             if (other.transform.TryGetComponent(out SorterSlot slot))
             {
                 _isCollidingWithSort = true;
+
                 if (!_dragging)
                 {
                     HandleSlotCollision(slot);

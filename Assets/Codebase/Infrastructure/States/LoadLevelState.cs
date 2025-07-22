@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Codebase.Gameplay.Pool;
 using Codebase.Gameplay.ShapeSpawner;
 using Codebase.Gameplay.ShapeSpawner.Factory;
 using Codebase.Gameplay.UI;
@@ -27,13 +28,12 @@ namespace Codebase.Infrastructure.States
         private readonly IShapeSpawnerLimiter _shapeSpawnerLimiter;
         private readonly ShapeSpawnerFactory _shapeSpawnerFactory;
         private readonly ShapeSpawnerManager _shapeSpawnerManager;
-        
-        private List<ShapeSpawner> _spawners = new List<ShapeSpawner>();
+        private readonly ShapePool _shapePool;
 
         public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, LoadingCurtain loadingCurtain,
             GameSettings gameSettings, HealthService healthService, ScoreService scoreService, SimpleEventBus eventBus,
             ShapeSpawnerFactory shapeSpawnerFactory, IShapeSpawnerLimiter shapeSpawnerLimiter,
-            ShapeSpawnerManager shapeSpawnerManager)
+            ShapeSpawnerManager shapeSpawnerManager, ShapePool shapePool)
         {
             _stateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
@@ -45,6 +45,7 @@ namespace Codebase.Infrastructure.States
             _shapeSpawnerFactory = shapeSpawnerFactory;
             _shapeSpawnerLimiter = shapeSpawnerLimiter;
             _shapeSpawnerManager = shapeSpawnerManager;
+            _shapePool = shapePool;
 
             _eventBus.Subscribe<GameRestartSignal>(OnGameRestart);
         }
@@ -77,14 +78,14 @@ namespace Codebase.Infrastructure.States
             {
                 ShapeSpawner shapeSpawner = _shapeSpawnerFactory.CreateAt(point.transform.position);
                 shapeSpawner.transform.SetParent(point.transform.parent);
-                _spawners.Add(shapeSpawner);
+             
             }
         }
 
         private void OnGameRestart(GameRestartSignal signal)
         {
+            _shapePool.DespawnAllActive();
             StartGame();
-            _spawners.ForEach(x => x.Despawn());
         }
 
         private void StartGame()

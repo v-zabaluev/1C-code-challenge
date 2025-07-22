@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40a54b5c3c604cb8b2dda83ae80f88f7, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  SortTargetRange:
-    Min: 10
+  ShapesCountRange:
+    Min: 15
     Max: 20
   SpawnTimeoutRange:
     Min: 0.5
-    Max: 2
+    Max: 1
   MovementSpeedRange:
-    Min: 2
+    Min: 3
     Max: 5
   PlayerHealth: 3

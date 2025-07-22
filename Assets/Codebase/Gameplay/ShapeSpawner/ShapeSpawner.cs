@@ -16,9 +16,6 @@ namespace Codebase.Gameplay.ShapeSpawner
         [Inject] private ShapeFactory _shapeFactory;
         [Inject] private ShapeSpritesDatabase _spritesDatabase;
         
-        private List<Shape> _activeShapes = new List<Shape>();
-        public List<Shape> ActiveShapes => _activeShapes;
-        
         public Shape Spawn(float speed)
         {
             var data = _spritesDatabase.GetRandomShapeData();
@@ -26,15 +23,8 @@ namespace Codebase.Gameplay.ShapeSpawner
             
             shape.Initialize(speed);
             shape.StartMovement();
-            _activeShapes.Add(shape);
 
             return shape;
-        }
-
-        public void Despawn()
-        {
-            _activeShapes.ForEach(x=>x.Dispose());
-            _activeShapes.Clear();
         }
     }
 }

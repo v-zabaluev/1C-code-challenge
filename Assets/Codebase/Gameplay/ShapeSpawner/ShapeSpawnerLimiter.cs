@@ -24,7 +24,7 @@ namespace Codebase.Gameplay.ShapeSpawner
         }
         public void SetShapeSpawnerLimit(IntRangeValues count)
         {
-            MaxSpawns = Random.Range(count.Min, count.Max);
+            MaxSpawns = Random.Range(count.Min, count.Max + 1);
             _currentSpawns = 0;
         }
     }
